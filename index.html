@@ -6,6 +6,11 @@
     <title>TEST</title>
     <link rel="stylesheet" href="https://seo-k.github.io/css/reset.css" />
     <style>
+      h2 {
+        font-size: 36px;
+        text-align: center;
+      }
+
       #header {
         position: sticky;
         top: 0;
@@ -25,7 +30,8 @@
           left: 20px;
           width: 170px;
           height: 60px;
-          background: url(https://recruit.kakaobank.com/_next/static/media/01-gnb-white.b29a515d50a2f2332061517f926300c5.svg) no-repeat center / contain;
+          background: url(https://recruit.kakaobank.com/_next/static/media/01-gnb-white.b29a515d50a2f2332061517f926300c5.svg)
+            no-repeat center / contain;
           transform: translateY(-50%);
         }
 
@@ -66,11 +72,6 @@
           height: 320px;
         }
 
-        h2 {
-          font-size: 36px;
-          text-align: center;
-        }
-
         p {
           display: flex;
           flex-direction: column;
@@ -84,7 +85,8 @@
           content: "";
           width: 28px;
           height: 16px;
-          background: url("https://recruit.kakaobank.com/_next/static/media/02-arrow-56.2fa858a30b7a3ffc9a30eccc26a6e164.svg") no-repeat center / contain;
+          background: url("https://recruit.kakaobank.com/_next/static/media/02-arrow-56.2fa858a30b7a3ffc9a30eccc26a6e164.svg")
+            no-repeat center / contain;
           animation: upDown 0.5s alternate infinite ease-in-out;
         }
       }
@@ -162,7 +164,7 @@
       }
       .main-video {
         position: relative;
-        min-height: 400vh;
+        /* min-height: 400vh; */
 
         & article {
           position: sticky;
@@ -250,6 +252,18 @@
           transform: rotate(360deg);
         }
       }
+      .main-banner {
+        height: 100vh;
+        padding-bottom: -100vh;
+      }
+
+      .main-info {
+        position: relative;
+        z-index: 2;
+        height: 100vh;
+        color: #000;
+        background-color: #fff;
+      }
     </style>
   </head>
   <body>
@@ -265,7 +279,10 @@
     <main>
       <section class="main-visual">
         <figure>
-          <img src="https://recruit.kakaobank.com/_next/static/media/02-img-hands.49cd2bd35e71288bc5d65f7c7fd43ed9.png" alt="손모양" />
+          <img
+            src="https://recruit.kakaobank.com/_next/static/media/02-img-hands.49cd2bd35e71288bc5d65f7c7fd43ed9.png"
+            alt="손모양"
+          />
         </figure>
         <h2>
           이미 모두의 땡땡<br />
@@ -279,14 +296,22 @@
         <ul class="main-panel__list"></ul>
         <div class="main-panel__img">
           <figure>
-            <img src="https://recruit.kakaobank.com/_next/static/image/public/images/ryan/03-img-ryan.5d2862452730274c1b0bed7dc8fde575.png" />
+            <img
+              src="https://recruit.kakaobank.com/_next/static/image/public/images/ryan/03-img-ryan.5d2862452730274c1b0bed7dc8fde575.png"
+            />
           </figure>
         </div>
       </section>
       <section class="main-video">
         <article>
           <div class="video-wrap">
-            <video id="video" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4" muted loop></video>
+            <video
+              id="video"
+              src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+              type="video/mp4"
+              muted
+              loop
+            ></video>
 
             <figure class="thumbnail-wrap">
               <img id="thumbnail" src="" alt="" />
@@ -305,6 +330,24 @@
             <p>혁신이 만든<br />압도적인 성장</p>
           </div>
         </article>
+      </section>
+      <section class="main-banner">
+        <h2>카카오뱅크의 혜택</h2>
+        <h2>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, culpa similique aspernatur minima nisi,
+          expedita nesciunt rerum ipsam aliquam recusandae mollitia quia iste itaque iusto, iure eos esse vel quae.
+        </h2>
+
+        <figure style="width: 200px; margin: 0 auto" class="animation-target">
+          <img
+            src="https://recruit.kakaobank.com/_next/image?url=%2F_next%2Fstatic%2Fimage%2Fpublic%2Fimages%2F08-benefits-03.10fdb36c01eff99d41eeb42e6b6554cd.png&w=640&q=75"
+            alt=""
+          />
+        </figure>
+      </section>
+      <section class="main-info">
+        <h2>카카오뱅크의 혜택</h2>
+        <p>카카오뱅크는 다양한 혜택을 제공합니다.</p>
       </section>
     </main>
 
@@ -385,44 +428,74 @@
       };
 
       const videoPlayer = () => {
+        const videoSection = document.querySelector(".main-video");
         const video = document.getElementById("video");
         const thumbnailImg = document.getElementById("thumbnail");
         const loadingIndicator = document.getElementById("loadingIndicator");
         const playButton = document.getElementById("playButton");
+        const videoPlayBack = 500;
+
         playButton.style.display = "none";
 
-        // loadeddata를 사용한 썸네일 설정:
-        video.addEventListener("loadeddata", () => {
-          video.currentTime = 5; // 비디오를 5초로 이동
-          console.log(video.duration);
-          const canvas = document.createElement("canvas"); // 캔버스 생성
+        const setThumbnail = () => {
+          // video.currentTime = 5; // 비디오를 5초로 이동
+          const canvas = document.createElement("canvas");
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
-
           canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height); // 비디오의 첫 프레임을 캔버스에 그림
-          const thumbnailUrl = canvas.toDataURL(); // 캔버스의 내용을 이미지로 변환
-          thumbnailImg.src = thumbnailUrl; // 썸네일 이미지 설정
-        });
+          thumbnailImg.src = canvas.toDataURL(); // 캔버스의 내용을 이미지로 변환 썸네일 이미지 설정
+        };
 
-        // canplaythrough를 사용한 자동 재생 시작 및 로딩 인디케이터 숨김:
-        video.addEventListener("canplaythrough", () => {
-          // 로딩 인디케이터 숨김
+        const handleVideoReady = () => {
           loadingIndicator.style.display = "none";
           thumbnailImg.style.display = "none";
-        });
 
-        // const observer = new IntersectionObserver(
-        //   (entries) => {
-        //     console.log(entry);
-        //     // const entry = entries[0];
-        //     if (entries.isIntersecting) {
-        //       window.addEventListener("scroll", handleScroll);
-        //     } else {
-        //       window.removeEventListener("scroll", handleScroll);
-        //     }
-        //   },
-        //   { threshold: 0.2 }
-        // );
+          const observer = new IntersectionObserver(
+            ([entry]) => {
+              if (entry.intersectionRatio < 1) {
+                window.addEventListener("scroll", handleScroll);
+              } else {
+                window.removeEventListener("scroll", handleScroll);
+              }
+            },
+            { threshold: [1] }
+          );
+
+          observer.observe(videoSection);
+        };
+
+        // 1. 비디오의 duration 값으로 설정 비디오의 height 값을 설정
+        // 장점: 비디오 길이에 따라 동적으로 조절되어 유연성이 높음.
+        // 단점: 비디오 로딩이 완료되어야 정확한 높이를 설정할 수 있음.
+
+        const handleScroll = () => {
+          video.currentTime = (window.scrollY - videoSection.offsetTop) / videoPlayBack;
+        };
+
+        // 2. 고정된 height 값에서 비디오의 duration 값으로 설정
+        // 장점: 비디오 로딩과 무관하게 즉시 레이아웃을 설정할 수 있음.
+        // 단점: 비디오 길이가 변경되면 수동으로 조절해야 함 [ 속도 조절을 위해].
+        // const handleScroll = () => {
+        //   console.log("object");
+        //   const videoDuration = video.duration;
+        //   const scrollableArea = videoSection.getBoundingClientRect().height;
+        //   const currentScroll = window.scrollY - videoSection.offsetTop;
+        //   const oneSecondScrollValue = scrollableArea / videoDuration;
+        //   video.currentTime = Math.min(Math.max(currentScroll / oneSecondScrollValue, 0), videoDuration);
+        // };
+
+        const setVideoSectionHeight = () => {
+          videoSection.style.height = `${video.duration * videoPlayBack}px`;
+        };
+
+        video.addEventListener("loadeddata", () => {
+          setThumbnail();
+          setVideoSectionHeight();
+        }); // loadeddata를 사용한 썸네일 설정:
+        video.addEventListener("canplaythrough", handleVideoReady); // canplaythrough를 사용한 자동 재생 시작 및 로딩 인디케이터 숨김:
+
+        // 윈도우 리사이즈 시 높이 재조정
+        window.addEventListener("resize", setVideoSectionHeight);
       };
 
       const videoPlayControl = () => {
@@ -465,32 +538,63 @@
         });
       };
 
-      const videoTextWrap = document.querySelector(".main-video__description-wrap");
-      const videoText = document.querySelector(".main-video__description-wrap p");
+      const videoText = () => {
+        const videoTextWrap = document.querySelector(".main-video__description-wrap");
+        const videoText = document.querySelector(".main-video__description-wrap p");
 
-      const computedStyle = window.getComputedStyle(videoTextWrap);
-      const topValue = parseFloat(computedStyle.getPropertyValue("top"));
-      const observer = new IntersectionObserver(
-        ([e]) => {
-          if (e.intersectionRatio < 1) {
-            window.onscroll = () => {
-              const division = topValue;
-              const end = document.querySelector(".main-video").offsetTop + window.innerHeight;
-              const opacityValue = 1 - (end - window.scrollY) / division;
+        const computedStyle = window.getComputedStyle(videoTextWrap);
+        const topValue = parseFloat(computedStyle.getPropertyValue("top"));
+        const observer = new IntersectionObserver(
+          ([e]) => {
+            if (e.intersectionRatio < 1) {
+              window.onscroll = () => {
+                const division = topValue;
+                const end = document.querySelector(".main-video__description-wrap").offsetTop + window.innerHeight;
+                const opacityValue = 1 - (end - window.scrollY) / division;
 
-              console.log(end, Math.round(window.scrollY), document.querySelector(".main-video").offsetTop, window.innerHeight, videoTextWrap.offsetTop);
-              videoText.style.opacity = opacityValue;
-            };
-          }
-        },
-        { threshold: [1] }
-      );
+                videoText.style.opacity = opacityValue;
+              };
+            }
+          },
+          { threshold: [1] }
+        );
 
-      observer.observe(videoText);
+        observer.observe(videoText);
+      };
+
+      const fixedTarget = () => {
+        const targetWrap = document.querySelector(".main-banner");
+        const target = document.querySelector(".animation-target");
+
+        // const observer = new IntersectionObserver(
+        //   ([e]) => {
+        //     if (e.isIntersecting) {
+        //       console.log("object");
+        //       // window.onscroll = () => {
+        //       //   target.style.transform = `translateY(${window.scrollY - target.offsetTop}px)`;
+        //       // };
+        //       window.addEventListener("scroll", handleScroll);
+        //     } else {
+        //       console.log("?");
+        //       window.removeEventListener("scroll", handleScroll);
+        //       target.style.transform = "translateY(1000%)";
+        //     }
+        //   },
+        //   { threshold: 0.5 }
+        // );
+
+        // const handleScroll = () => {
+        //   target.style.transform = `translateY(${(window.scrollY - target.offsetTop) * 3}px)`;
+        // };
+
+        // observer.observe(targetWrap);
+      };
 
       addPanel();
       scrollEvent();
       videoPlayer();
+      videoText();
+      fixedTarget();
     </script>
   </body>
 </html>
