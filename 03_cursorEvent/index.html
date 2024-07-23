@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cursor Event</title>
+    <style>
+      html {
+        cursor: none;
+      }
+      .cursor {
+        position: absolute;
+        display: none;
+        width: 25px;
+        height: 25px;
+        background-color: #000;
+        border-radius: 50%;
+      }
+      .cursor__back {
+        position: absolute;
+        display: block;
+        inset: 0;
+        border-radius: 50%;
+        box-shadow: 0 0 0 2px orange;
+        z-index: 0;
+      }
+      .cursor__shadow {
+        position: absolute;
+        display: block;
+        inset: 0;
+        border-radius: 50%;
+        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cursor">
+      <span class="cursor__back"></span>
+      <span class="cursor__shadow"></span>
+    </div>
+
+    <script>
+      let x, y;
+
+      window.addEventListener("mousemove", (e) => {
+        // console.log(e);
+        const cursor = document.querySelector(".cursor");
+        console.log(cursor, e.offsetY, e.offsetX);
+
+        cursor.style.display = "block";
+
+        cursor.style.top = `${e.offsetY}px`;
+        cursor.style.left = `${e.offsetX}px`;
+      });
+    </script>
+  </body>
+</html>
