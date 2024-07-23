@@ -1,0 +1,61 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+  margin: 0;
+}
+
+.btn {
+  background-color: chocolate;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s, background-color 0.2s;
+}
+
+.btn .text {
+  display: inline-block;
+}
+
+.btn .loader {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border: 4px solid white;
+  border-top: 4px solid rgb(30, 210, 84);
+  border-radius: 50%;
+  animation: spinner 1s linear infinite;
+  position: absolute;
+}
+
+.btn.loading {
+  background-color: darkorange;
+  box-shadow: 0 4px 0 brown, 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn.loading .text {
+  visibility: hidden;
+}
+
+.btn.loading .loader {
+  display: inline-block;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
