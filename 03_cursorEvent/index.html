@@ -9,50 +9,96 @@
         cursor: none;
       }
       .cursor {
+      }
+      .cursor__front {
         position: absolute;
-        display: none;
+        display: block;
         width: 25px;
         height: 25px;
+        border-radius: 50%;
+        background-color:  orange;
+      }
+      .cursor__front:after{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 22px;
+        height: 22px;
+        content:"";
         background-color: #000;
         border-radius: 50%;
+        transform: translate(-50%, -50%);
       }
-      .cursor__back {
-        position: absolute;
-        display: block;
-        inset: 0;
-        border-radius: 50%;
-        box-shadow: 0 0 0 2px orange;
-        z-index: 0;
-      }
+
       .cursor__shadow {
+        display: none; 
         position: absolute;
-        display: block;
-        inset: 0;
+        width: 35px;
+        height: 35px;
         border-radius: 50%;
-        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0.3);
         z-index: 0;
+        transition: all .04s ease, scale 1s ease;
+        transform-origin: center center;
+      }
+
+      @keyframes clicked {
+        0%{
+          transform: scale(1);
+        }
+        60%{
+      transform: scale(0.8);
+        }
+        100%{
+      transform: scale(1);
+        }
+      }
+
+      .cursor__shadow.clicked {
+        animation: clicked alternate 2s ;
       }
     </style>
   </head>
   <body>
     <div class="cursor">
-      <span class="cursor__back"></span>
+      <span class="cursor__front"></span>
       <span class="cursor__shadow"></span>
     </div>
 
     <script>
       let x, y;
+      const cursorFront = document.querySelector(".cursor__front");
+      const cursorShadow = document.querySelector(".cursor__shadow");
 
       window.addEventListener("mousemove", (e) => {
-        // console.log(e);
-        const cursor = document.querySelector(".cursor");
-        console.log(cursor, e.offsetY, e.offsetX);
+        x = e.clientX;
+        y = e.clientY;
+    
+        const cursorWidth = cursorFront.offsetWidth;
+        const cursorHeight = cursorFront.clientHeight;
+        const cursorShadowWidth = cursorShadow.offsetWidth;
+        const cursorShadowHeight = cursorShadow.clientHeight;
+        // console.log( e.offsetY, e.offsetX, e.clientY , e.clientX);
 
-        cursor.style.display = "block";
+        cursorFront.style.display = "block";
+        cursorShadow.style.display = "block";
 
-        cursor.style.top = `${e.offsetY}px`;
-        cursor.style.left = `${e.offsetX}px`;
+        cursorFront.style.top = `${y - cursorWidth/2}px`;
+        cursorFront.style.left = `${x - cursorHeight/2}px`;
+
+        cursorShadow.style.top = `${y - cursorShadowWidth/2}px`;
+        cursorShadow.style.left = `${x - cursorShadowHeight/2}px`;
       });
+
+
+      window.addEventListener("click", (e) => {
+        e.stopPropagation();
+        cursorShadow.classList.remove("clicked"); // 기존 애니메이션 클래스를 제거합니다.
+        void cursorShadow.offsetWidth; // 강제로 리플로우를 트리거하여 애니메이션이 재실행되도록 합니다.
+        cursorShadow.classList.add("clicked"); // 애니메이션 클래스를 다시 추가합니다.
+      });
+
+
     </script>
   </body>
 </html>
