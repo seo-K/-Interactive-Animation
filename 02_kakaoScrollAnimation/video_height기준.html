@@ -226,8 +226,6 @@
           }
         }
 
-        .main-video__description {
-        }
         .main-video__description-wrap {
           position: absolute;
           top: calc(50% + 125px);
@@ -240,7 +238,6 @@
           font-size: 20px;
           line-height: 1.4;
           opacity: 0;
-          margin-top: calc(50vh - 125px);
           /* transition: all 3s; */
         }
         .main-video__description-wrap p.active {
@@ -294,7 +291,7 @@
         </div>
       </section>
       <section class="main-video">
-        <article class="main-video__video">
+        <article>
           <div class="video-wrap">
             <video
               id="video"
@@ -318,13 +315,9 @@
         </article>
         <article class="main-video__description">
           <div class="main-video__description-wrap">
-            <p>네스퀵먹고<br />제티의 성장</p>
+            <p>혁신이 만든<br />압도적인 성장</p>
           </div>
         </article>
-      </section>
-      <section style="height: 200vh">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores sunt totam voluptates dicta possimus ea tempore
-        velit porro, suscipit eligendi distinctio nihil quibusdam modi, sed officiis. Eius tempore reiciendis eaque!
       </section>
     </main>
 
@@ -410,7 +403,6 @@
         const thumbnailImg = document.getElementById("thumbnail");
         const loadingIndicator = document.getElementById("loadingIndicator");
         const playButton = document.getElementById("playButton");
-        const videoPlayBack = 500;
 
         playButton.style.display = "none";
 
@@ -429,7 +421,7 @@
 
           const observer = new IntersectionObserver(
             ([entry]) => {
-              if (entry.isIntersecting) {
+              if (entry.intersectionRatio < 1) {
                 window.addEventListener("scroll", handleScroll);
               } else {
                 window.removeEventListener("scroll", handleScroll);
@@ -441,25 +433,20 @@
           observer.observe(videoSection);
         };
 
-        // 비디오의 duration 값으로 설정 비디오의 height 값을 설정
-        // 장점: 비디오 길이에 따라 동적으로 조절되어 유연성이 높음.
-        // 단점: 비디오 로딩이 완료되어야 정확한 높이를 설정할 수 있음.
+        // 고정된 height 값에서 비디오의 duration 값으로 설정
+        // 장점: 비디오 로딩과 무관하게 즉시 레이아웃을 설정할 수 있음.
+        // 단점: 비디오 길이가 변경되면 수동으로 조절해야 함 [ 속도 조절을 위해].
         const handleScroll = () => {
-          video.currentTime = (window.scrollY - videoSection.offsetTop) / videoPlayBack;
+          console.log("object");
+          const videoDuration = video.duration;
+          const scrollableArea = videoSection.getBoundingClientRect().height;
+          const currentScroll = window.scrollY - videoSection.offsetTop;
+          const oneSecondScrollValue = scrollableArea / videoDuration;
+          video.currentTime = Math.min(Math.max(currentScroll / oneSecondScrollValue, 0), videoDuration);
         };
 
-        const setVideoSectionHeight = () => {
-          videoSection.style.height = `${video.duration * videoPlayBack}px`;
-        };
-
-        video.addEventListener("loadeddata", () => {
-          setThumbnail();
-          setVideoSectionHeight();
-        }); // loadeddata를 사용한 썸네일 설정:
+        video.addEventListener("loadeddata", setThumbnail); // loadeddata를 사용한 썸네일 설정:
         video.addEventListener("canplaythrough", handleVideoReady); // canplaythrough를 사용한 자동 재생 시작 및 로딩 인디케이터 숨김:
-
-        // 윈도우 리사이즈 시 높이 재조정
-        window.addEventListener("resize", setVideoSectionHeight);
       };
 
       const videoPlayControl = () => {
@@ -502,42 +489,31 @@
         });
       };
 
-      const videoText = () => {
-        const videoText = document.querySelector(".main-video__description-wrap p");
+      const videoTextWrap = document.querySelector(".main-video__description-wrap");
+      const videoText = document.querySelector(".main-video__description-wrap p");
 
-        const observer = new IntersectionObserver(
-          ([entry]) => {
-            console.log(entry.isIntersecting);
-            if (entry.isIntersecting) {
-              window.addEventListener("scroll", handleScroll);
-            } else {
-              window.removeEventListener("scroll", handleScroll);
-            }
-          },
-          { threshold: [1] }
-        );
+      const computedStyle = window.getComputedStyle(videoTextWrap);
+      const topValue = parseFloat(computedStyle.getPropertyValue("top"));
+      const observer = new IntersectionObserver(
+        ([e]) => {
+          if (e.intersectionRatio < 1) {
+            window.onscroll = () => {
+              const division = topValue;
+              const end = document.querySelector(".main-video__description-wrap").offsetTop + window.innerHeight;
+              const opacityValue = 1 - (end - window.scrollY) / division;
 
-        observer.observe(videoText);
+              videoText.style.opacity = opacityValue;
+            };
+          }
+        },
+        { threshold: [1] }
+      );
 
-        function handleScroll() {
-          const division = window.innerHeight;
-          const end = document.querySelector(".main-video").offsetTop + window.innerHeight;
-          let opacityValue = (window.scrollY - end) / division;
-          // opacityValue를 0과 1 사이로 제한
-          opacityValue = Math.max(0, Math.min(1, opacityValue));
-          let marginTopValue = videoText.style.marginTop;
-          let transformValue = opacityValue * -200;
-
-          console.log(marginTopValue, "?");
-          // videoText.style.opacity = opacityValue;
-          // videoText.style.transform = `translateY(${transformValue}px)`;
-        }
-      };
+      observer.observe(videoText);
 
       addPanel();
       scrollEvent();
       videoPlayer();
-      videoText();
     </script>
   </body>
 </html>
