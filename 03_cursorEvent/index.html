@@ -8,6 +8,11 @@
       html {
         cursor: none;
       }
+      body {
+        position: relative;
+        width: 100%;
+        /* min-height: 100vh; */
+      }
       .cursor {
       }
       .cursor__front {
@@ -16,46 +21,62 @@
         width: 25px;
         height: 25px;
         border-radius: 50%;
-        background-color:  orange;
+        background-color: orange;
       }
-      .cursor__front:after{
+      .cursor__front:after {
         position: absolute;
         top: 50%;
         left: 50%;
         width: 22px;
         height: 22px;
-        content:"";
+        content: "";
         background-color: #000;
         border-radius: 50%;
         transform: translate(-50%, -50%);
       }
 
       .cursor__shadow {
-        display: none; 
+        display: none;
         position: absolute;
-        width: 35px;
-        height: 35px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         background-color: rgba(0, 0, 0, 0.3);
         z-index: 0;
-        transition: all .04s ease, scale 1s ease;
+        transform: scale(1);
+        transition: top 0.04s ease, left 0.04s ease, transform 0.2s ease-in-out;
         transform-origin: center center;
       }
 
-      @keyframes clicked {
-        0%{
-          transform: scale(1);
+      .cursor__shadow.clicked {
+        transform: scale(0.5);
+      }
+
+      @keyframes ripple {
+        0% {
+          transform: scale(0);
+          opacity: 1;
         }
-        60%{
-      transform: scale(0.8);
+        20% {
+          transform: scale(5);
+          opacity: 1;
         }
-        100%{
-      transform: scale(1);
+        100% {
+          transform: scale(10);
+          opacity: 0;
         }
       }
 
-      .cursor__shadow.clicked {
-        animation: clicked alternate 2s ;
+      .ripple {
+        position: absolute;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #d5a54e;
+        animation: ripple 0.5s ease-out;
+        animation-fill-mode: forwards;
+        z-index: -1;
       }
     </style>
   </head>
@@ -73,7 +94,7 @@
       window.addEventListener("mousemove", (e) => {
         x = e.clientX;
         y = e.clientY;
-    
+
         const cursorWidth = cursorFront.offsetWidth;
         const cursorHeight = cursorFront.clientHeight;
         const cursorShadowWidth = cursorShadow.offsetWidth;
@@ -83,22 +104,34 @@
         cursorFront.style.display = "block";
         cursorShadow.style.display = "block";
 
-        cursorFront.style.top = `${y - cursorWidth/2}px`;
-        cursorFront.style.left = `${x - cursorHeight/2}px`;
+        cursorFront.style.top = `${y - cursorWidth / 2}px`;
+        cursorFront.style.left = `${x - cursorHeight / 2}px`;
 
-        cursorShadow.style.top = `${y - cursorShadowWidth/2}px`;
-        cursorShadow.style.left = `${x - cursorShadowHeight/2}px`;
+        cursorShadow.style.top = `${y - cursorShadowWidth / 2}px`;
+        cursorShadow.style.left = `${x - cursorShadowHeight / 2}px`;
       });
 
-
       window.addEventListener("click", (e) => {
-        e.stopPropagation();
+        const spotEl = document.createElement("span");
+
+        spotEl.className = "ripple";
+        document.body.appendChild(spotEl);
+        spotEl.style.top = `${y - spotEl.offsetHeight / 2}px`;
+        spotEl.style.left = `${x - spotEl.offsetWidth / 2}px`;
+
+        spotEl.addEventListener("animationend", () => {
+          document.body.removeChild(spotEl);
+        });
+      });
+
+      window.addEventListener("mousedown", () => {
         cursorShadow.classList.remove("clicked"); // 기존 애니메이션 클래스를 제거합니다.
         void cursorShadow.offsetWidth; // 강제로 리플로우를 트리거하여 애니메이션이 재실행되도록 합니다.
         cursorShadow.classList.add("clicked"); // 애니메이션 클래스를 다시 추가합니다.
       });
-
-
+      window.addEventListener("mouseup", () => {
+        cursorShadow.classList.remove("clicked"); // 기존 애니메이션 클래스를 제거합니다.
+      });
     </script>
   </body>
 </html>
