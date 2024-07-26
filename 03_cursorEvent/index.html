@@ -5,15 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cursor Event</title>
     <style>
-      html {
-        cursor: none;
-      }
-      body {
-        position: relative;
+   html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed, 
+    figure, figcaption, footer, header, hgroup, 
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 100%;
+      font: inherit;
+      vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    article, aside, details, figcaption, figure, 
+    footer, header, hgroup, menu, nav, section {
+      display: block;
+    }
+    body {
+      overflow:hidden;
+    }
+    ol, ul {
+      list-style: none;
+    }
+    blockquote, q {
+      quotes: none;
+    }
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+      content: '';
+      content: none;
+    }
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    body {
+      position: relative;
+      background-color: #000;
         width: 100%;
-        /* min-height: 100vh; */
+        min-height: 100vh;
       }
       .cursor {
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
       }
       .cursor__front {
         position: absolute;
@@ -76,11 +121,46 @@
         background-color: #d5a54e;
         animation: ripple 0.5s ease-out;
         animation-fill-mode: forwards;
-        z-index: -1;
+        z-index: 0;
+      }
+
+      .preloader {
+        position: absolute;
+       inset:0;
+        background-color: #000;
+      }
+
+      .preloader__btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: none;
+        color: rgb(213, 165, 78);
+        background-color: #222;
+        transform: translate(-50%, -50%);
+        transform-origin: center;
+        animation-composition: add;
+      }
+
+      .preloader__btn_hold {
+        font-size: 19px;
+        line-height: 20px;
+        font-weight: 800;
+        letter-spacing: normal;
       }
     </style>
   </head>
   <body>
+
+    <section class="preloader shown-area">
+      <button class="preloader__btn" type="button">
+        <span class="preloader__btn_hold">Hold</span>
+      </button>
+    </section>
+    
     <div class="cursor">
       <span class="cursor__front"></span>
       <span class="cursor__shadow"></span>
@@ -122,16 +202,25 @@
         spotEl.addEventListener("animationend", () => {
           document.body.removeChild(spotEl);
         });
+
       });
 
-      window.addEventListener("mousedown", () => {
+      window.addEventListener("mousedown", (e) => {
         cursorShadow.classList.remove("clicked"); // 기존 애니메이션 클래스를 제거합니다.
         void cursorShadow.offsetWidth; // 강제로 리플로우를 트리거하여 애니메이션이 재실행되도록 합니다.
         cursorShadow.classList.add("clicked"); // 애니메이션 클래스를 다시 추가합니다.
       });
+      
       window.addEventListener("mouseup", () => {
         cursorShadow.classList.remove("clicked"); // 기존 애니메이션 클래스를 제거합니다.
       });
+
+      const preloadButton = document.querySelector(".preloader__btn");
+      preloadButton.addEventListener("mousedown" , ()=> {
+        // 여기서 스케일 값을 넣어주고. 누르는 시간을 측정해야함.
+
+        preloadButton.style.scale = "1.1"
+      })
     </script>
   </body>
 </html>
