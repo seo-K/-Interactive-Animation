@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #222;
+      }
+
+      canvas {
+        background-color: rgb(0, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+
+    <!-- 0. 기본 선언 -->
+    <!-- <script>
+      const canvas = document.querySelector("canvas");
+
+      const ctx = canvas.getContext("2d"); // 그리게될 도구
+
+      const canvasWidth = 300;
+      const canvasHeight = 300;
+
+      // 두 설정크기가 다를경우, 이미지가 왜곡될 수 있음. [확대되거나 축소되어 보일 수 있음.]
+      // 시각적인 렌더링 크기 설정
+      canvas.style.width = canvasWidth + "px";
+      canvas.style.height = canvasHeight + "px";
+
+      // 캔버스의 실제 그림 크기
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+
+      ctx.fillRect(50, 50, 100, 100); // x, y, width, height
+    </script> -->
+
+    <!-- 1. 화면 해상도를 고려한 캔버스 생성 -->
+    <!-- <script>
+      const canvas = document.querySelector("canvas");
+
+      const ctx = canvas.getContext("2d"); // 그리게될 도구
+      const dpr = window.devicePixelRatio; // 화면 픽셀 비율에 따라 설정해주는게 좋음.
+
+      const canvasWidth = 300;
+      const canvasHeight = 300;
+
+      // 두 설정크기가 다를경우, 이미지가 왜곡될 수 있음. [확대되거나 축소되어 보일 수 있음.]
+      // 시각적인 렌더링 크기 설정
+      canvas.style.width = canvasWidth + "px";
+      canvas.style.height = canvasHeight + "px";
+
+      // 캔버스의 실제 그림 크기
+      canvas.width = canvasWidth * dpr;
+      canvas.height = canvasHeight * dpr;
+
+      ctx.scale(dpr, dpr);
+      ctx.fillRect(50, 50, 100, 100); // x, y, width, height
+    </script> -->
+
+    <!-- 2. 파티클 만들기 -->
+    <script>
+      const canvas = document.querySelector("canvas");
+
+      const ctx = canvas.getContext("2d");
+      const dpr = window.devicePixelRatio;
+
+      const canvasWidth = innerWidth;
+      const canvasHeight = innerHeight;
+
+      // 두 설정크기가 다를경우, 이미지가 왜곡될 수 있음. [확대되거나 축소되어 보일 수 있음.]
+      // 시각적인 렌더링 크기 설정
+      canvas.style.width = canvasWidth + "px";
+      canvas.style.height = canvasHeight + "px";
+
+      // 캔버스의 실제 그림 크기
+      canvas.width = canvasWidth * dpr;
+      canvas.height = canvasHeight * dpr;
+
+      ctx.scale(dpr, dpr);
+
+      class Particle {
+        // init 함수
+        constructor(x, y, radius, vy) {
+          this.x = x;
+          this.y = y;
+          this.radius = radius;
+          this.vy = vy;
+        }
+
+        // init된 값을 업데이트
+        update() {
+          // particle.y += 1;
+          this.y += this.vy;
+        }
+
+        draw() {
+          // 그릴때는 해당 함수 사용
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = "blue";
+          ctx.fill();
+          // ctx.stroke();
+          ctx.closePath();
+        }
+      }
+
+      const x = 100;
+      const y = 100;
+      const radius = 50;
+      const vy = 1;
+
+      const particle = new Particle(x, y, radius, vy);
+      const TOTAL = 15;
+      const randomNumBetween = (min, max) => {
+        return Math.random() * (max - min + 1) + min;
+      };
+      // Math.floor(Math.random() * (max - min + 1)) + min;
+
+      let particles = [];
+
+      for (let i = 0; i < TOTAL; i++) {
+        const x = randomNumBetween(0, canvasWidth);
+        const y = randomNumBetween(0, canvasHeight);
+        const radius = randomNumBetween(50, 100);
+        const vy = randomNumBetween(1, 5);
+        const particle = new Particle(x, y, radius, vy);
+        particles.push(particle);
+      }
+
+      let 육십fps기준간격 = 1000 / 60; // 60fps를 타겟으로 함
+      let 현재시간, 시간차;
+      let 이전시간 = Date.now();
+
+      function animate() {
+        // requestAnimationFrame : 주사율 기준으로 애니메이션을 그려줌. 144hz 라면 144번 그려줌.
+        window.requestAnimationFrame(animate);
+        현재시간 = Date.now();
+        시간차 = 현재시간 - 이전시간;
+
+        if (시간차 < 육십fps기준간격) return;
+
+        // 육십fps기준간격을 넘어가면 싹다 지우고 그려줌
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        // y를 1씩 증가시키면서 그려줌.
+
+        particles.forEach((particle) => {
+          particle.draw();
+          // particle.y += randomNumBetween(1, 2);
+          particle.update();
+        });
+        // particle.draw();
+
+        이전시간 = 현재시간 - (시간차 % 육십fps기준간격);
+      }
+
+      animate();
+    </script>
+  </body>
+</html>

@@ -5,53 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cursor Event</title>
     <style>
-   html, body, div, span, applet, object, iframe,
-    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-    a, abbr, acronym, address, big, cite, code,
-    del, dfn, em, img, ins, kbd, q, s, samp,
-    small, strike, strong, sub, sup, tt, var,
-    b, u, i, center,
-    dl, dt, dd, ol, ul, li,
-    fieldset, form, label, legend,
-    table, caption, tbody, tfoot, thead, tr, th, td,
-    article, aside, canvas, details, embed, 
-    figure, figcaption, footer, header, hgroup, 
-    menu, nav, output, ruby, section, summary,
-    time, mark, audio, video {
-      margin: 0;
-      padding: 0;
-      border: 0;
-      font-size: 100%;
-      font: inherit;
-      vertical-align: baseline;
-    }
-    /* HTML5 display-role reset for older browsers */
-    article, aside, details, figcaption, figure, 
-    footer, header, hgroup, menu, nav, section {
-      display: block;
-    }
-    body {
-      overflow:hidden;
-    }
-    ol, ul {
-      list-style: none;
-    }
-    blockquote, q {
-      quotes: none;
-    }
-    blockquote:before, blockquote:after,
-    q:before, q:after {
-      content: '';
-      content: none;
-    }
-    table {
-      border-collapse: collapse;
-      border-spacing: 0;
-    }
+      html,
+      body,
+      div,
+      span,
+      applet,
+      object,
+      iframe,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      blockquote,
+      pre,
+      a,
+      abbr,
+      acronym,
+      address,
+      big,
+      cite,
+      code,
+      del,
+      dfn,
+      em,
+      img,
+      ins,
+      kbd,
+      q,
+      s,
+      samp,
+      small,
+      strike,
+      strong,
+      sub,
+      sup,
+      tt,
+      var,
+      b,
+      u,
+      i,
+      center,
+      dl,
+      dt,
+      dd,
+      ol,
+      ul,
+      li,
+      fieldset,
+      form,
+      label,
+      legend,
+      table,
+      caption,
+      tbody,
+      tfoot,
+      thead,
+      tr,
+      th,
+      td,
+      article,
+      aside,
+      canvas,
+      details,
+      embed,
+      figure,
+      figcaption,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      output,
+      ruby,
+      section,
+      summary,
+      time,
+      mark,
+      audio,
+      video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      /* HTML5 display-role reset for older browsers */
+      article,
+      aside,
+      details,
+      figcaption,
+      figure,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      section {
+        display: block;
+      }
+      body {
+        overflow: hidden;
+      }
+      ol,
+      ul {
+        list-style: none;
+      }
+      blockquote,
+      q {
+        quotes: none;
+      }
+      blockquote:before,
+      blockquote:after,
+      q:before,
+      q:after {
+        content: "";
+        content: none;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
 
-    body {
-      position: relative;
-      background-color: #000;
+      body {
+        position: relative;
+        background-color: #000;
         width: 100%;
         min-height: 100vh;
       }
@@ -126,7 +207,7 @@
 
       .preloader {
         position: absolute;
-       inset:0;
+        inset: 0;
         background-color: #000;
       }
 
@@ -154,13 +235,12 @@
     </style>
   </head>
   <body>
-
     <section class="preloader shown-area">
       <button class="preloader__btn" type="button">
         <span class="preloader__btn_hold">Hold</span>
       </button>
     </section>
-    
+
     <div class="cursor">
       <span class="cursor__front"></span>
       <span class="cursor__shadow"></span>
@@ -202,7 +282,6 @@
         spotEl.addEventListener("animationend", () => {
           document.body.removeChild(spotEl);
         });
-
       });
 
       window.addEventListener("mousedown", (e) => {
@@ -210,17 +289,36 @@
         void cursorShadow.offsetWidth; // 강제로 리플로우를 트리거하여 애니메이션이 재실행되도록 합니다.
         cursorShadow.classList.add("clicked"); // 애니메이션 클래스를 다시 추가합니다.
       });
-      
+
       window.addEventListener("mouseup", () => {
         cursorShadow.classList.remove("clicked"); // 기존 애니메이션 클래스를 제거합니다.
       });
 
       const preloadButton = document.querySelector(".preloader__btn");
-      preloadButton.addEventListener("mousedown" , ()=> {
+      preloadButton.addEventListener("mousedown", () => {
         // 여기서 스케일 값을 넣어주고. 누르는 시간을 측정해야함.
+        addScale();
+      });
+      preloadButton.addEventListener("mouseup", () => {
+        // 여기서 스케일 값을 넣어주고. 누르는 시간을 측정해야함.
+        addScale();
+      });
 
-        preloadButton.style.scale = "1.1"
-      })
+      function addScale() {
+        setInterval(() => {
+          scale += 0.175;
+          preloadButton.style.scale = scale;
+        }, 10);
+      }
+      function minusScale() {
+        setInterval(() => {
+          scale -= 0.175;
+          preloadButton.style.scale = scale;
+          if (scale <= 1) {
+            clearInterval(addScale);
+          }
+        }, 10);
+      }
     </script>
   </body>
 </html>
