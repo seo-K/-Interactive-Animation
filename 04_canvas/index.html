@@ -96,6 +96,7 @@
 
         // init된 값을 업데이트
         update() {
+          // y를 1씩 증가시키면서 그려줌.
           // particle.y += 1;
           this.y += this.vy;
         }
@@ -117,7 +118,7 @@
       const vy = 1;
 
       const particle = new Particle(x, y, radius, vy);
-      const TOTAL = 15;
+      const TOTAL = 2;
       const randomNumBetween = (min, max) => {
         return Math.random() * (max - min + 1) + min;
       };
@@ -148,14 +149,20 @@
 
         // 육십fps기준간격을 넘어가면 싹다 지우고 그려줌
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        // y를 1씩 증가시키면서 그려줌.
 
         particles.forEach((particle) => {
           particle.draw();
-          // particle.y += randomNumBetween(1, 2);
           particle.update();
+
+          // 파티클이 바닥으로 떨어지면 y 값을 다시 올려주고 다른 값들은 다시 랜덤 선언해주기
+          if (particle.y - particle.radius > canvasHeight) {
+            particle.y = -particle.radius;
+
+            particle.x = randomNumBetween(0, canvasWidth);
+            particle.radius = randomNumBetween(50, 100);
+            particle.vh = randomNumBetween(1, 5);
+          }
         });
-        // particle.draw();
 
         이전시간 = 현재시간 - (시간차 % 육십fps기준간격);
       }
