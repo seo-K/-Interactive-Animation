@@ -144,15 +144,11 @@
           this.radius = radius;
           this.vy = vy;
           this.acc = 1.03; // 1 이상은 빠르게 떨어지고, 1 이하면 느린 속도로 멈춤
-          this.maxVy = 10; // 최대 속도 제한
         }
 
         update() {
           // this.vy += 1.1; // 여기
           this.vy *= this.acc;
-          // if (this.vy > this.maxVy) {
-          //   this.vy = this.maxVy; // 최대 속도로 제한
-          // }
           this.y += this.vy;
         }
 
