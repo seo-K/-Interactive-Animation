@@ -1,3 +1,5 @@
+// 캔버스 관련 기본 설정을 초기화 및 재사용 가능한 공통 속성들을 정의.
+
 export default class CanvasOption {
   constructor() {
     this.canvas = document.querySelector("canvas");
@@ -7,5 +9,6 @@ export default class CanvasOption {
     this.interval = 1000 / this.fps;
     this.canvasWidth = innerWidth;
     this.canvasHeight = innerHeight;
+    this.bgColor = "#000000";
   }
 }
