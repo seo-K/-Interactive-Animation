@@ -14,13 +14,19 @@ export default class Particle extends CanvasOption {
     // this.y -= 1;
     this.x += this.vx;
     this.y += this.vy;
-    this.opacity -= 0.01;
+    this.opacity -= 0.02;
   }
 
   draw() {
-    this.ctx.beginPath();
-    this.ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
+    // this.ctx.beginPath();
+    // this.ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
+    // this.ctx.fillStyle = `rgba(255,255,255,${this.opacity})`;
+    // this.ctx.fill();
+    // this.ctx.closePath();
+
     this.ctx.fillStyle = `rgba(255,255,255,${this.opacity})`;
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
     this.ctx.fill();
     this.ctx.closePath();
   }

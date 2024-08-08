@@ -27,19 +27,22 @@ class Canvas extends CanvasOption {
   }
 
   createParticles() {
-    const PARTICLE_NUM = 5;
+    const PARTICLE_NUM = 2000;
     const x = randomNumBetween(0, this.canvasWidth);
     const y = randomNumBetween(0, this.canvasHeight);
 
     for (let i = 0; i < PARTICLE_NUM; i++) {
-      const vx = randomNumBetween(-5, 5);
-      const vy = randomNumBetween(-5, 5);
+      const r = randomNumBetween(0, 6);
+      const angle = (Math.PI / 180) * randomNumBetween(0, 360);
+
+      const vx = r * Math.cos(angle);
+      const vy = r * Math.sin(angle);
+
+      console.log(x, y, vx, vy);
+      // const vx = randomNumBetween(-5, 5);
+      // const vy = randomNumBetween(-5, 5);
       this.particles.push(new Particle(x, y, vx, vy));
     }
-  }
-
-  update() {
-    this.y += 1;
   }
 
   render() {
@@ -53,8 +56,13 @@ class Canvas extends CanvasOption {
 
       if (delta < this.interval) return;
 
+      // this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+
       this.ctx.fillStyle = this.bgColor;
       this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // // opacity가 0 이하인 파티클을 제거합니다
+      // this.particles = this.particles.filter(particle => particle.opacity > 0);
 
       // this.ctx.fillStyle = "blue";
       // this.ctx.fillRect(100, 100, 300, 300);
