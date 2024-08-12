@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background-color: #333;
+      }
+      canvas {
+        border: 1px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      const canvas = document.querySelector("canvas");
+      const dpr = window.devicePixelRatio;
+      let canvasWidth, canvasHeight;
+      let x, y, radius;
+
+      const ctx = canvas.getContext("2d");
+      const TOTAL = 3;
+
+      const randomNumBetween = (min, max) => {
+        return Math.random() * (max - min + 1) + min;
+      };
+
+      const MakeCircle = (x, y, radius) => {
+        // ctx.arc(x, y, radius, 0, Math.PI * 2);
+        // ctx.fillStyle = "blue";
+        // ctx.fill();
+        ctx.beginPath(); // 새 경로 시작
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = "blue";
+        ctx.fill();
+        ctx.closePath(); // 경로 닫기
+      };
+
+      const animate = () => {
+        Particle.update();
+        // 만약 로켓 위치가 일정 y좌표값일 경우 requestAnimationFrame 종료
+        // if (yPos >= 500) {
+        //   cancelAnimationFrame(rafId);
+        //   return;
+        // }
+        let rafId = requestAnimationFrame(animate); // rAF 반복 호출
+
+        // Particle.draw();
+      };
+
+      requestAnimationFrame(animate); // 애니메이션 시작
+
+      const Particle = {
+        init() {
+          canvasWidth = window.innerWidth;
+          canvasHeight = window.innerHeight;
+
+          canvas.style.width = canvasWidth + "px";
+          canvas.style.height = canvasHeight + "px";
+
+          canvas.width = canvasWidth * dpr;
+          canvas.height = canvasHeight * dpr;
+
+          ctx.scale(dpr, dpr);
+        },
+        update() {
+          y = y += 1;
+        },
+        draw() {
+          ctx.clearRect(0, 0, canvasWidth, canvasHeight); // 캔버스 지우기
+          for (let i = 0; i < TOTAL; i++) {
+            x = randomNumBetween(0, canvasWidth);
+            y = randomNumBetween(0, canvasHeight);
+            radius = randomNumBetween(20, 50);
+            MakeCircle(x, y, radius);
+          }
+        },
+      };
+
+      window.addEventListener("DOMContentLoaded", () => {
+        Particle.init();
+        Particle.draw();
+      });
+      window.addEventListener("resize", () => {
+        Particle.init();
+        Particle.draw();
+      });
+    </script>
+  </body>
+</html>
