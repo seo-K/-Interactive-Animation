@@ -23,10 +23,10 @@
       const canvas = document.querySelector("canvas");
       const dpr = window.devicePixelRatio;
       let canvasWidth, canvasHeight;
-      let x, y, radius;
+      let x, y, vy, radius;
 
       const ctx = canvas.getContext("2d");
-      const TOTAL = 3;
+      const TOTAL = 5;
 
       const randomNumBetween = (min, max) => {
         return Math.random() * (max - min + 1) + min;
@@ -71,7 +71,7 @@
           ctx.scale(dpr, dpr);
         },
         update() {
-          y = y += 1;
+          y += vh;
         },
         draw() {
           ctx.clearRect(0, 0, canvasWidth, canvasHeight); // 캔버스 지우기
