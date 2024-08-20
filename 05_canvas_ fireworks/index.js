@@ -12,10 +12,12 @@ class Canvas extends CanvasOption {
     this.particles = [];
   }
   init() {
-    this.canvas.style.width = this.canvasWidth + "px";
-    this.canvas.style.height = this.canvasHeight + "px";
-    // this.canvasWidth = innerWidth;
-    // this.canvasHeight = innerHeight;
+    this.canvasWidth = innerWidth;
+    this.canvasHeight = innerHeight;
+
+    // this.canvas.style.width = this.canvasWidth + "px";
+    // this.canvas.style.height = this.canvasHeight + "px";
+
     this.canvas.width = this.canvasWidth * this.dpr;
     this.canvas.height = this.canvasHeight * this.dpr;
     this.ctx.scale(this.dpr, this.dpr);
@@ -27,21 +29,24 @@ class Canvas extends CanvasOption {
   }
 
   createParticles() {
-    const PARTICLE_NUM = 2000;
+    const PARTICLE_NUM = 400;
     const x = randomNumBetween(0, this.canvasWidth);
     const y = randomNumBetween(0, this.canvasHeight);
 
     for (let i = 0; i < PARTICLE_NUM; i++) {
-      const r = randomNumBetween(0, 6);
+      const r = randomNumBetween(2, 100) * 0.2;
       const angle = (Math.PI / 180) * randomNumBetween(0, 360);
 
+      // 네모 형식으로가 아닌 원형으로 퍼지도록 세팅
       const vx = r * Math.cos(angle);
       const vy = r * Math.sin(angle);
+      const opacity = randomNumBetween(0.6, 0.9);
 
       console.log(x, y, vx, vy);
+      // 네모로 퍼지는 이슈가 있음
       // const vx = randomNumBetween(-5, 5);
       // const vy = randomNumBetween(-5, 5);
-      this.particles.push(new Particle(x, y, vx, vy));
+      this.particles.push(new Particle(x, y, vx, vy, opacity));
     }
   }
 
@@ -58,17 +63,19 @@ class Canvas extends CanvasOption {
 
       // this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-      this.ctx.fillStyle = this.bgColor;
+      this.ctx.fillStyle = this.bgColor + "40"; // #00000010
       this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
       // // opacity가 0 이하인 파티클을 제거합니다
       // this.particles = this.particles.filter(particle => particle.opacity > 0);
 
-      // this.ctx.fillStyle = "blue";
-      // this.ctx.fillRect(100, 100, 300, 300);
-      this.particles.forEach((particle) => {
+      this.particles.forEach((particle, index) => {
         particle.update();
         particle.draw();
+
+        // console.log(particle.opacity, this.particles, index);
+
+        if (particle.opacity < 0) this.particles.splice(index, 1);
       });
 
       then = now - (delta & this.interval);
@@ -81,10 +88,15 @@ class Canvas extends CanvasOption {
 const canvas = new Canvas();
 
 // 간단하게,
-window.onload = () => {
+// window.onload = () => {
+//   canvas.init();
+//   canvas.render();
+// };
+
+window.addEventListener("load", () => {
   canvas.init();
   canvas.render();
-};
+});
 
 window.addEventListener("resize", () => {
   canvas.init();
