@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100vh;
+        display: grid;
+        place-content: center;
+      }
+
+      body {
+        background-color: #eee;
+        color: #111;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      :root {
+        /* --marquee-elements: 12; */ /* defined with JavaScript */
+        /* --marquee-width: 80vw;
+        --marquee-height: 20vh;
+        --marquee-elements-displayed: 4;
+        --marquee-element-width: calc(var(--marquee-width) / var(--marquee-elements-displayed));
+        --marquee-animation-duration: calc(var(--marquee-elements) * 3s); */
+      }
+
+      .marquee {
+        position: relative;
+        width: 1000px;
+        height: 200px;
+        background-color: #111;
+        color: #eee;
+        overflow: hidden;
+      }
+      .marquee:before,
+      .marquee:after {
+        position: absolute;
+        top: 0;
+        width: 10rem;
+        height: 100%;
+        content: "";
+        z-index: 1;
+      }
+      .marquee:before {
+        left: 0;
+        background: linear-gradient(to right, #111 0%, transparent 100%);
+      }
+      .marquee:after {
+        right: 0;
+        background: linear-gradient(to left, #111 0%, transparent 100%);
+      }
+      .marquee-wrap {
+        list-style: none;
+        height: 100%;
+        display: flex;
+        animation: scrolling 1s linear infinite;
+      }
+      .marquee-wrap:hover {
+        animation-play-state: paused;
+      }
+      @keyframes scrolling {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(calc(-1 * 1000px * 3));
+          /* transform: translateX(calc(-1 * var(--marquee-element-width) * var(--marquee-elements))); */
+        }
+      }
+      .marquee-wrap li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        font-size: 2rem;
+        white-space: nowrap;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .marquee-wrap:hover {
+          animation-play-state: running;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css" />
+  </head>
+  <body>
+    <main>
+      <div class="marquee">
+        <ul class="marquee-wrap">
+          <li>MARQUEE TEST</li>
+        </ul>
+      </div>
+      <!-- <div class="marquee marquee-card">
+        <ul class="marquee-wrap">
+          <li>MARQUEE TEST</li>
+        </ul>
+      </div> -->
+    </main>
+    <script>
+      // const marquee = () => {
+      //   const marqueeWrap = document.querySelector("ul.marquee-wrap");
+      //   const marqueeContents = marqueeWrap.querySelectorAll("li");
+
+      //   let marqueeElementsDisplayed, marqueeElementWidth, marqueeAnimationDuration;
+
+      //   marqueeElementsDisplayed = 3;
+      //   marqueeElementWidth = marqueeContents[0].getBoundingClientRect().width;
+      //   marqueeAnimationDuration = marqueeElementsDisplayed * 3;
+      //   // marqueeElementWidth = marquee.innerWidth / marqueeElementsDisplayed;
+      //   // marqueeElements = 3;
+
+      //   console.log(marqueeElementsDisplayed, marqueeElementWidth, marqueeAnimationDuration);
+
+      //   // root.style.setProperty("--marquee-elements", marqueeContent.children.length);
+
+      //   for (let i = 0; i < marqueeElementsDisplayed; i++) {
+      //     marqueeWrap.appendChild(marqueeWrap.children[i].cloneNode(true));
+      //   }
+      //   marqueeWrap.style.animationDuration = `${marqueeAnimationDuration}s`;
+      // };
+
+      const marquee = () => {
+        const marquee = document.querySelector(".marquee");
+        const marqueeWrap = document.querySelector(".marquee-wrap");
+        const marqueeContents = marqueeWrap.querySelectorAll("li");
+
+        const marqueeElementsDisplayed = 3;
+        const marqueeElementWidth = marquee.getBoundingClientRect().width / marqueeElementsDisplayed;
+
+        marqueeContents.forEach((item) => (item.style.width = `${marqueeElementWidth}px`));
+        // Clone elements to create the scrolling effect
+        for (let i = 0; i < marqueeElementsDisplayed; i++) {}
+
+        // transform: translateX(calc(-1 * var(--marquee-element-width) * var(--marquee-elements)));
+
+        const totalWidth = marqueeElementWidth * marqueeWrap.children.length;
+        const marqueeAnimationDuration = marqueeWrap.children.length * 3; // Adjust duration based on total elements
+
+        console.log(totalWidth);
+
+        marqueeWrap.style.animationDuration = `${marqueeAnimationDuration}s`;
+
+        // Update the @keyframes scrolling to match the total width
+        const styleSheet = document.styleSheets[0];
+        styleSheet.insertRule(
+          `
+          @keyframes scrolling {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-${totalWidth}px); }
+          }
+        `,
+          styleSheet.cssRules.length
+        );
+      };
+      marquee();
+    </script>
+  </body>
+</html>
