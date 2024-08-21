@@ -23,7 +23,7 @@ function init() {
 }
 
 function createRing() {
-  const PARTICLE_NUM = 20;
+  const PARTICLE_NUM = 500;
   for (let i = 0; i < PARTICLE_NUM; i++) {
     particles.push(new Particle());
   }
@@ -39,13 +39,17 @@ function render() {
     now = Date.now();
     delta = now - then;
     if (delta < interval) return;
-
-    then = now - (delta % interval);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     particles.forEach((particle, index) => {
       particle.update();
       particle.draw(ctx);
+
+      // 파티클의 opacity가 0 이하면 삭제되도록 하기. (아니면 opacity가 0인채로 계속 남아있게되기때문)
+      if (particle < 0) particles.splice(index, 1);
     });
+
+    then = now - (delta % interval);
   };
 
   requestAnimationFrame(frame);
