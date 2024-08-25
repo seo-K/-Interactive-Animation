@@ -1,20 +1,27 @@
 import CanvasOption from "./canvasOption.js";
 
 export default class Particle extends CanvasOption {
-  constructor(x, y, vx, vy) {
+  constructor(x, y, vx, vy, opacity) {
     super();
     this.x = x;
     this.y = y;
     this.vx = vx;
     this.vy = vy;
-    this.opacity = 1;
+    this.opacity = opacity;
+    this.gravity = 0.12; // 중력
+    this.friction = 0.93; // 마찰
   }
 
   update() {
+    this.vy += this.gravity;
+
+    this.vx = this.vx * this.friction;
+    this.vy = this.vy * this.friction;
+
     // this.y -= 1;
     this.x += this.vx;
     this.y += this.vy;
-    this.opacity -= 0.02;
+    this.opacity -= 0.01;
   }
 
   draw() {
