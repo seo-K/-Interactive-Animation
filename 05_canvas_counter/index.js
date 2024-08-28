@@ -108,7 +108,7 @@ window.addEventListener("click", () => {
     }
   );
 
-  const ringImg = document.querySelector("#ringt");
+  const ringImg = document.querySelector("#ring");
   gsap.fromTo(
     ringImg,
     { opaciry: 1 },
