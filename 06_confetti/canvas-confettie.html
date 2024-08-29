@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>canvas-confettie</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <style>
+      button {
+        padding: 1rem 2.5rem;
+        font-size: 1.8rem;
+        background-color: #4caf50; /* 녹색 */
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, transform 0.2s ease,
+          box-shadow 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #45a049; /* 어두운 녹색 */
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      button:active {
+        background-color: #3e8e41; /* 더 어두운 녹색 */
+        transform: translateY(2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <button type="button">confettie</button>
+  </body>
+  <script>
+    const confettie = () => {
+      console.log("ss");
+      let count = 200;
+      let defaults = {
+        origin: { y: 0.7 },
+      };
+
+      function fire(particleRatio, opts) {
+        confetti({
+          ...defaults,
+          ...opts,
+          particleCount: Math.floor(count * particleRatio),
+        });
+      }
+
+      fire(0.25, {
+        spread: 26,
+        startVelocity: 55,
+      });
+      fire(0.2, {
+        spread: 60,
+      });
+      fire(0.35, {
+        spread: 100,
+        decay: 0.91,
+        scalar: 0.8,
+      });
+      fire(0.1, {
+        spread: 120,
+        startVelocity: 25,
+        decay: 0.92,
+        scalar: 1.2,
+      });
+      fire(0.1, {
+        spread: 120,
+        startVelocity: 45,
+      });
+    };
+    const button = document.querySelector("button");
+    button.addEventListener("click", () => {
+      confettie();
+    });
+  </script>
+</html>
