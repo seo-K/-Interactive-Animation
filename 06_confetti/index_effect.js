@@ -1,5 +1,3 @@
-import Particle from "./js/particle.js";
-
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 // dpr 3~4 인경우 ctx.scale 시 퍼포먼스 이슈가 있을 수 있음. 그래서 1보다 큰경우 모두 2로 통일 (2로도 충분하게 보여줄 수 있음)
@@ -9,8 +7,6 @@ let canvasHeight = innerHeight;
 
 const interval = 100 / 60;
 
-const particles = [];
-
 const init = () => {
   canvasWidth = innerWidth;
   canvasHeight = innerHeight;
@@ -19,18 +15,20 @@ const init = () => {
   canvas.width = canvasWidth * dpr;
   canvas.height = canvasHeight * dpr;
   ctx.scale(dpr, dpr);
-  confetti({ x: canvasWidth / 2, y: canvasHeight / 2, count: 20 });
 };
-
-function confetti({ x, y, count }) {
-  for (let i = 0; i < count; i++) {
-    particles.push(new Particle(x, y));
-  }
-}
 
 const render = () => {
   let now, delta;
   let then = Date.now();
+
+  const x = innerWidth;
+  let y = innerHeight;
+  // const x = innerWidth / 2;
+  // let y = innerHeight / 2;
+  let widthAlpah = 0;
+  const width = 50;
+  const height = 50;
+  let deg = -0.1;
 
   const frame = () => {
     // 재귀적으로 스스로 계속 실행시킴. 144hz 1초에 144번 60hz 1초에 60번 실행된다. 두 모니터에 동일하게 보여짐.
@@ -40,10 +38,25 @@ const render = () => {
     // ctx.clearRect(0, 0, canvasWidth , canvasHeight );
     ctx.clearRect(0, 0, canvasWidth * dpr, canvasHeight * dpr);
 
-    for (let i = particles.length - 1; i >= 0; i--) {
-      particles[i].update();
-      particles[i].draw(ctx);
-    }
+    widthAlpah += 0.1;
+    deg += 0.1;
+    y += 1;
+
+    ctx.translate(x + width, y + height);
+    ctx.rotate(deg);
+    ctx.translate(-x - width, -y - height);
+
+    // 생성
+    ctx.fillStyle = "blue";
+    //  Math.cos(n) 결과값은 1 ~ -1 사이를 왔다갔다한다.
+    // ctx.fillRect(x, y, width, height);
+    ctx.fillRect(
+      x,
+      y,
+      width * Math.cos(widthAlpah),
+      height * Math.sin(widthAlpah)
+    );
+    ctx.resetTransform();
 
     then = now - (delta % interval);
   };
